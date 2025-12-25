@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Men</title>
+</head>
+<body class="flex bg-background min-h-screen flex-col">
+  <nav class="bg-background flex items-center justify-between p-5 border-b mb-2">
+    <div class="flex items-center justify-center gap-y-7 font-light text-lg">
+      <div class="text-header">
+        <a class="hover:text-black hover:font-bold" href="/html/man.html">MAN</a>
+        <a class="hover:text-black hover:font-bold" href="">WOMAN</a>
+        <a class="hover:text-black hover:font-bold" href="">KIDS</a>
+      </div>
+    </div>
+    <div class="flex gap-7 items-center justify-center">
+      <button class="size-5 hover:opacity-40">
+        <img src="/resources/search.png" alt="">
+      </button>
+      <button class="size-5  hover:opacity-40">
+        <img class="" src="/resources/user.png" alt="">
+      </button>
+      <button class="size-6 hover:opacity-40">
+        <img src="/resources/heart.png" alt="">
+      </button>
+      <button class="size-6 hover:opacity-40">
+        <img src="/resources/parcel.png" alt="">
+      </button>
+      <button onclick ="document.documentElement.classList.toggle('dark')" class="size-6">
+        <img src="/resources/moon.png" alt="">
+      </button>
+    </div>
+  </nav>
+  <main class="grow flex flex-col gap-5 p-5">
+    <section>
+      <a href="">Home</a>
+    </section>
+    <section class=" text-primary">
+      <button class="group flex gap-2 items-center ">
+        <img class = "size-5" src="/resources/settings-sliders.png" alt="">
+        <p class="text-sm font-light group-hover:font-bold">Filters</p>
+      </button>
+    </section>
+    <section class="men-product-container grid gap-x-2 gap-y-5 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div class="group grid gap-2 text-primary text-center">
+        <div class="relative rounded-lg w-full aspect-4/4 overflow-hidden">
+          <img src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" class="w-full h-full object-cover"/>
+          <button class="bg-primary text-background font-extralight text-sm px-3 py-1 rounded-md
+          opacity-0 group-hover:opacity-100 translate-y-2
+          transition-all duration-300 group-hover:translate-y-0
+          absolute bottom-5 right-5 cursor-pointer" 
+          >
+           + Quick add
+          </button>
+        </div>
+        <p class="font-semibold text-sm">Sample</p>
+        <p class="font-light text-sm">$41 AUD</p>
+
+      </div>
+    </section>  
+  </main>
+  <footer class="bg-background text-primary font-bold text-sm p-5">
+    <p>
+      SALE
+    </p>
+    <p class="font-light">
+      IN STORE AND ONLINE
+    </p>
+    <p class="font-light text-sm">&copy; 2025 Vanta. All rights reserved</p>
+  </footer>
+</body>
+<script type="module" src="/src/main.js"></script>
+<script type="module" src="/scripts/man/man.js"></script>
+</html>
