@@ -8,13 +8,13 @@ function renderProduct() {
 
   products.items.forEach((item) => {
     productHTML += `
-      <div class="group grid gap-2 text-primary text-center">
-        <div class="relative rounded-lg w-full aspect-4/4 overflow-hidden cursor-pointer">
+      <div class="js-view-item group grid gap-2 text-primary text-center" data-product-Id = ${item.id}>
+        <div class="relative rounded-lg w-full aspect-4/4 overflow-hidden cursor-pointer" >
           <img src="/${item.image}" class="w-full h-full object-cover"/>
-          <button class="bg-background text-primary font-extralight text-sm px-3 py-1 rounded-md
+          <button class="js-add-button  bg-background text-primary font-extralight text-sm px-3 py-1 rounded-md
           opacity-0 group-hover:opacity-100 translate-y-2
           transition-all duration-300 group-hover:translate-y-0
-          absolute bottom-5 right-5 cursor-pointer" 
+          absolute bottom-5 right-5 cursor-pointer" data-product-Id = ${item.id}
           >
            + Quick add
           </button>
@@ -25,6 +25,19 @@ function renderProduct() {
     `;
   });
   containerElem.innerHTML = productHTML;
+
+  document.querySelectorAll('.js-view-item').forEach((view) => {
+    view.addEventListener('click', () => {
+      const itemId = view.dataset.productId;
+      window.location.href = `/html/view-item/view-item.html?id=${itemId}`;
+    });
+  });
+
+  document.querySelectorAll('.js-add-button').forEach((add) => {
+    add.addEventListener('click', () => {
+      const itemId = add.dataset.productId;
+    });
+  });
 }
 
 renderProduct();
