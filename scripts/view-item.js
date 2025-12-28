@@ -1,9 +1,12 @@
 import { Cart } from "../data/cart.js";
 import { Products } from "../data/products.js";
 import { loadCartValue } from "./shared/header.js";
+import { renderDialog, showDialog } from "./shared/modal.js";
 
 const products = new Products();
 const cart = new Cart('Order');
+
+renderDialog();
 
 let quantity = 0;
 let quantityElem;
@@ -115,8 +118,9 @@ function addToCartControl() {
   const addToCartElem = document.querySelector('.js-add-to-cart-btn');
   
   addToCartElem.addEventListener('click', () => {
-    quantity = quantityElem.value;
-    cart.addToCart(itemId, quantity);
-    loadCartValue();
+    showDialog();
+    // quantity = quantityElem.value;
+    // cart.addToCart(itemId, quantity);
+    // loadCartValue();
   });
 }

@@ -4,7 +4,7 @@ export class Products {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
     image: "resources/product-image/BOX-TEE-BLACK-FRONT.webp",
     name: "Box Tee Black Front",
-    basebasePriceCents: 1090,
+    basePriceCents: 1090,
     description: 'Sample'
   }, {
     id: "e43638ce-6aa0-4b85-b27f-e1d07eb678c7",
