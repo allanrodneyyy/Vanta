@@ -1,9 +1,10 @@
 import { Cart } from "../../data/cart.js";
 import { Products } from "../../data/products.js";
-import { loadCartValue } from "../shared/header.js";
+import { loadCartValue, clickedHeaderCart } from "../shared/header.js";
 
 const cart = new Cart('Order');
 const products = new Products();
+clickedHeaderCart();
 
 function renderProduct() {
   loadCartValue();
@@ -30,7 +31,6 @@ function renderProduct() {
     `;
   });
   containerElem.innerHTML = productHTML;
-  console.log(containerElem);
   document.querySelectorAll('.js-view-item').forEach((view) => {
     view.addEventListener('click', () => {
       const itemId = view.dataset.productId;

@@ -1,4 +1,5 @@
 import { Cart } from "../../data/cart.js";
+import { renderCartDialog } from "./modal.js";
 
 const cart = new Cart('Order');
 
@@ -11,4 +12,11 @@ export function loadCartValue() {
     cartElem.innerText = cart.items.length;
   }
   
+}
+
+export function clickedHeaderCart() {
+  const cartElem = document.querySelector('.js-cart-header');
+  cartElem.addEventListener('click', () => {
+    renderCartDialog();
+  });
 }

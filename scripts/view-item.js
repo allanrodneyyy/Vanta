@@ -1,12 +1,11 @@
 import { Cart } from "../data/cart.js";
 import { Products } from "../data/products.js";
-import { loadCartValue } from "./shared/header.js";
+import { loadCartValue, clickedHeaderCart} from "./shared/header.js";
 import { renderDialog, showDialog } from "./shared/modal.js";
 
 const products = new Products();
 const cart = new Cart('Order');
-
-renderDialog();
+clickedHeaderCart();
 
 let quantity = 0;
 let quantityElem;
@@ -121,6 +120,6 @@ function addToCartControl() {
     quantity = quantityElem.value;
     cart.addToCart(itemId, quantity);
     loadCartValue();
-    showDialog();
+    renderDialog();   
   });
 }

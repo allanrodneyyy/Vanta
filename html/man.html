@@ -24,15 +24,17 @@
       <button class="size-6 hover:opacity-40">
         <img src="/resources/heart.png" alt="">
       </button>
-      <button class="relative size-6 hover:opacity-40">
-        <img src="/resources/parcel.png" alt="">
-        <p class="js-header-cart-quantity hidden relative text-xs bg-red-600 p-0.5 rounded-2xl text-white -top-7.5 left-1.5">0</p>
+      <button class="js-cart-header relative size-6 ">
+        <img class= "hover:opacity-40" src="/resources/parcel.png" alt="">
+        <p class="js-header-cart-quantity hidden relative text-xs bg-red-600 p-0.5 rounded-2xl text-white -top-7.5 left-1.5">0</p> 
       </button>
       <button onclick ="document.documentElement.classList.toggle('dark')" class="size-6">
         <img src="/resources/moon.png" alt="">
       </button>
     </div>
   </nav>
+  <section class="header-cart-container">
+  </section>
   <main class="grow flex flex-col gap-5 p-5">
     <section>
       <a href="">Home</a>
@@ -44,23 +46,9 @@
       </button>
     </section>
     <section class="men-product-container grid gap-x-2 gap-y-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      <div class="group grid gap-2 text-primary text-center">
-        <div class="relative rounded-lg w-full aspect-4/4 overflow-hidden">
-          <img src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" class="w-full h-full object-cover"/>
-          <button class="bg-primary text-background font-extralight text-sm px-3 py-1 rounded-md
-          opacity-0 group-hover:opacity-100 translate-y-2
-          transition-all duration-300 group-hover:translate-y-0
-          absolute bottom-5 right-5 cursor-pointer" 
-          >
-           + Quick add
-          </button>
-        </div>
-        <p class="font-semibold text-sm">Sample</p>
-        <p class="font-light text-sm">$41 AUD</p>
-
-      </div>
     </section>  
   </main>
+ 
   <footer class="bg-background text-primary font-bold text-sm p-5">
     <p>
       SALE
