@@ -13,6 +13,7 @@ export class Cart {
 
   loadFromStorage() {
     this.items = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
+
   }
 
   addToCart(itemId, quantityParam) {
@@ -30,6 +31,5 @@ export class Cart {
       this.items.push({itemId, quantity: quantity});
 
     this.saveToStorage();
-    
   }
 }

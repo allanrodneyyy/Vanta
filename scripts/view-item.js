@@ -118,9 +118,9 @@ function addToCartControl() {
   const addToCartElem = document.querySelector('.js-add-to-cart-btn');
   
   addToCartElem.addEventListener('click', () => {
+    quantity = quantityElem.value;
+    cart.addToCart(itemId, quantity);
+    loadCartValue();
     showDialog();
-    // quantity = quantityElem.value;
-    // cart.addToCart(itemId, quantity);
-    // loadCartValue();
   });
 }

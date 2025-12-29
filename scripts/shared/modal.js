@@ -19,7 +19,7 @@ export function renderDialog() {
             </section>
           </div>
           <footer class="grid grid-cols-2 gap-2">
-            <button class = "dialog-cancel-button border p-3 rounded-xl text-xs font-semibold">View cart</button>
+            <button class = "dialog-view-cart-btn border p-3 rounded-xl text-xs font-semibold">View cart</button>
             <button class = "js-dialog-delete-button  dialog-delete-button border p-3 bg-stone-900 rounded-xl text-xs font-semibold text-white">Checkout</button>
           </footer>
         </div>
@@ -44,5 +44,19 @@ export function showDialog() {
     if (clickOutside) {
       dialogElem.close();
     }
+  });
+  
+  setTimeout(() => {
+    dialogElem.close();
+  }, 2000)
+
+  toCart();
+}
+
+export function toCart() {
+  const viewElem = document.querySelector('.dialog-view-cart-btn');
+
+  viewElem.addEventListener('click', () => {
+    window.location.href = "/html/cart/cart.html";
   });
 }

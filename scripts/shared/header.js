@@ -10,6 +10,5 @@ export function loadCartValue() {
     cartElem.classList.remove('hidden');
     cartElem.innerText = cart.items.length;
   }
-    
   
 }
