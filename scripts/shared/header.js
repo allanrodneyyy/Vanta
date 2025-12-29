@@ -7,26 +7,33 @@ export function loadCartValue() {
   cart.loadFromStorage();
   
   if(document.querySelector('.js-header-cart-quantity')) {
-    const cartElem = document.querySelector('.js-header-cart-quantity');
+    const cartElem = document.querySelectorAll('.js-header-cart-quantity');
+  
 
     if(cart.items.length){
-      cartElem.classList.remove('hidden');
-      cartElem.innerText = cart.items.length;
+      cartElem.forEach((elem) => {
+        elem.classList.remove('hidden');
+        elem.innerText = cart.items.length;
+      });
     } 
   }
 }
 
   if(document.querySelector('.js-cart-header')) {
-    const cartElem = document.querySelector('.js-cart-header');
-    cartElem.addEventListener('click', () => {
-      renderCartDialog();
-    });
+    const cartElem = document.querySelectorAll('.js-cart-header')
+      .forEach((cart) => {
+        cart.addEventListener('click', () => {
+          renderCartDialog();
+        });
+      });
   }
 
   if(document.querySelector('.js-login-header')) {
-    document.querySelector('.js-login-header')
-    .addEventListener('click', () => {
-      window.location.href = "/html/login/login.html";
+    document.querySelectorAll('.js-login-header')
+    .forEach((loginButton) => {
+      loginButton.addEventListener('click', () => {
+        window.location.href = "/html/login/login.html";
+      });
     });
   }
   
