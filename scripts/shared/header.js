@@ -36,4 +36,22 @@ export function loadCartValue() {
       });
     });
   }
+
+  if(document.querySelector('.js-burger-menu')) {
+    const burgerElem = document.querySelector('.burger-menu-container');
+    document.querySelectorAll('.js-burger-menu')
+    .forEach((burgerMenu) => {
+      burgerMenu.addEventListener('click', () => {
+        burgerElem.classList.remove('hidden');
+      });
+    });
+
+    const burgerClose = document.querySelector('.close-burger-menu');
+
+    burgerClose.addEventListener('click', () => {
+      burgerElem.classList.add('hidden');
+    })
+  }
+
+  
   

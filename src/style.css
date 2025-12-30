@@ -14,3 +14,13 @@
   --color-primary: #fff;
   --color-header: #fff;
 }
+
+/* hide scrollbar but keep scroll */
+.no-scrollbar {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;                /* Chrome, Safari */
+}

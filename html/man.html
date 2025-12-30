@@ -6,7 +6,7 @@
   <title>Men</title>
 </head>
 <body class="flex bg-background min-h-screen flex-col">
-  <nav class="min-[640px]:hidden bg-background flex items-center justify-between px-5 py-2 border-b ">
+  <nav class="min-[640px]:hidden  bg-background flex items-center justify-between px-5 py-2 border-b ">
     <a href="/index.html" class="block w-15 h-11 shrink-0">
       <img
         src="/resources/58063b20-f758-443a-9c29-fe428a362c26.png"
@@ -28,11 +28,51 @@
         <img class= "hover:opacity-40" src="/resources/parcel.png" alt="">
         <p class="js-header-cart-quantity hidden relative text-xs bg-red-600 p-0.5 rounded-2xl text-white -top-7.5 left-1.5">0</p> 
       </button>
-      <button class="js-cart-header size-6 mt-1">
+      <button class="js-burger-menu size-6 mt-1">
         <img class= "hover:opacity-40" src="/resources/list.png" alt="">
       </button>
     </div>
   </nav>
+
+  <div class="min-[640px]:hidden burger-menu-container fixed z-1000 bg-background hidden inset-0">
+    <div class="flex flex-col p-4 gap-5 border-b border-gray-200">
+      <button class="close-burger-menu self-end font-bold">X</button>
+      <header class="font-light flex justify-between">
+        <button class="">WOMEN</button>
+        <button class="">MEN</button>
+        <button class="">KIDS</button>
+      </header>
+    </div>
+    <section class="flex flex-col p-4">
+      <menu class="font-normal flex gap-1 flex-col">
+        <ul>CLOTHING</ul>
+        <ul>ACCESSORIES</ul>
+        <ul>SWIMWEAR AND BEACHWEAR</ul>
+        <ul>SHOES</ul>
+        <ul>SPORT</ul>
+      </menu>
+    </section>
+    <section class="overflow-x-auto no-scrollbar">
+      <div class="flex">
+        <div class="shrink-0 w-30 flex flex-col items-center">
+          <img class="h-50 w-full object-cover" src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" alt="">
+          <p>DESCRIPTION</p>
+        </div>
+        <div class="shrink-0 w-30">
+          <img class="h-50 w-full object-cover" src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" alt="">
+          <p>DESCRIPTION</p>
+        </div>
+        <div class="shrink-0 w-30">
+          <img class="h-50 w-full object-cover" src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" alt="">
+          <p>DESCRIPTION</p>
+        </div>
+        <div class="shrink-0 w-30">
+          <img class="h-50 w-full object-cover" src="/resources/product-image/BOX-TEE-BLACK-FRONT.webp" alt="">
+          <p>DESCRIPTION</p>
+        </div>
+      </div>
+    </section>
+  </div>
  
   <nav class="max-[640px]:hidden bg-background flex items-center justify-between p-5 border-b mb-2">
     <div class=" font-light text-lg">
@@ -68,7 +108,7 @@
   </nav>
   <section class="header-cart-container">
   </section>
-  <main class="grow flex flex-col gap-5 p-5">
+  <main class="main-content grow flex flex-col gap-5 p-5">
     <section>
       <a href="">Home</a>
     </section>
