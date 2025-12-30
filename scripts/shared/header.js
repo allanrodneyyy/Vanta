@@ -47,10 +47,10 @@ export function loadCartValue() {
     });
 
     const burgerClose = document.querySelector('.close-burger-menu');
-
     burgerClose.addEventListener('click', () => {
       burgerElem.classList.add('hidden');
-    })
+    });
+    
   }
 
   

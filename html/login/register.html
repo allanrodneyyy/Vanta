@@ -10,14 +10,14 @@
 </head>
 <body class="flex bg-background min-h-screen flex-col">
   <main class="grow">
-    <section class="grid grid-cols-1 lg:grid-cols-2 min-h-screen">
-      <div class="flex flex-col items-center justify-center gap-20">
-        <div class="w-[80%] lg:w-[50%] flex flex-col gap-9 lg:gap-20">
-          <a class=" self-start font-display tracking-[-20px]" href="/index.html">
+    <section class="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-2 min-h-screen max-[768px]:mt-[15%]">
+      <div class="flex flex-col items-center md:items-start lg:ml-[10%] gap-10">
+        <div class="w-[90%] sm:w-[80%] lg:w-[80%] xl:w-[60%] mx-auto flex flex-col gap-9 lg:gap-10">
+          <a class="self-center md:self-start max-[768px]:hidden" href="/index.html">
             <img class="md:size-10/12 lg:size-11/12" src="/resources/58063b20-f758-443a-9c29-fe428a362c26.png" alt="">
           </a>
           <section class="flex flex-col gap-5">
-            <p class="text-lg font-extralight tracking-wide">LOG IN</p>
+            <p class="text-base font-extralight tracking-wide">PERSONAL DETAILS</p>
             <div class="flex flex-col gap-6">
               <div class="relative w-full">
                 <input type="text" id="username" placeholder=" " class="peer w-full border-b border-black pt-2 pb-2 text-sm focus:outline-none">
@@ -31,27 +31,32 @@
                   PASSWORD
                 </label>
               </div>
+              <div class="relative w-full">
+                <input type="text" id="name" placeholder=" " class="peer w-full border-b border-black pt-2 pb-2 text-sm focus:outline-none">
+                <label for="name" class="absolute -left-1 top-4 text-gray-400 text-xs transition-all peer-placeholder-shown:top-4 peer-focus:-top-2 peer-focus:text-xs  peer-focus:text-black bg-white px-1">
+                  NAME
+                </label>
+              </div>
+              <div class="relative w-full">
+                <input type="text" id="surname" placeholder=" " class="peer w-full border-b border-black pt-2 pb-2 text-sm focus:outline-none">
+                <label for="surname" class="absolute -left-1 top-4 text-gray-400 text-xs transition-all peer-placeholder-shown:top-4 peer-focus:-top-2 peer-focus:text-xs  peer-focus:text-black bg-white px-1">
+                  SURNAME
+                </label>
+              </div>
             </div>
-            <p class="text-xs font-light underline">Have you forgotten your password?</p>
+          </section>
+          <section class="flex gap-2 items-center text-xs font-extralight">
+            <input type="checkbox" name="" id="">
+            <p>I accept the <a class="underline" target="_blank" href="https://static.zara.net/static/pdfs/AU/privacy-policy/privacy-policy-en_AU-20250521.pdf">privacy statement</a></p>
           </section>
           <section class="grid gap-2 font-extralight text-xs">
-            <button class="border p-2 bg-primary text-background cursor-pointer">LOG IN</button>
-            <a href="register.html" class="border p-2 cursor-pointer text-center">REGISTER</a>
+            <button class="border p-2 cursor-pointer">CREATE ACCOUNT</button>
           </section>
-          <footer class="bg-background text-primary font-bold text-sm">
-            <p>
-              SALE
-            </p>
-            <p class="font-light">
-              IN STORE AND ONLINE
-            </p>
+          <footer class="text-center md:text-left bg-background text-primary font-bold text-sm">
             <p class="font-light text-sm">&copy; 2025 Vanta. All rights reserved.</p>
           </footer>
         </div>
       </div>
-      <section class="hidden lg:flex h-screen">
-        <img class="size-full object-cover" src="/resources/product-image/T0738010104-ult.jpg" alt="">
-      </section>
     </section>
   </main>
  
