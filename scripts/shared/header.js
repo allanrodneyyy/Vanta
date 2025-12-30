@@ -1,5 +1,5 @@
 import { Cart } from "../../data/cart.js";
-import { getLoggedInUser } from "../login/usertoken.js";
+import { getLoggedInUser } from "../shared/usertoken.js";
 import { renderCartDialog } from "./modal.js";
 
 const cart = new Cart('Order');

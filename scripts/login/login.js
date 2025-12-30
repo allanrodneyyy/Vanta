@@ -1,7 +1,7 @@
 import { User } from "../../data/user/User.js";
 import dayjs from 'dayjs';
 import { logInDialog } from "../shared/modal.js";
-import { getLoggedInUser, issueToken } from "./usertoken.js";
+import { getLoggedInUser, issueToken } from "../shared/usertoken.js";
 
 const user = new User('Users');
 

@@ -23,3 +23,8 @@ export function getLoggedInUser() {
 
   return token.userId;
 }
+
+export function logOutUser() {
+  localStorage.removeItem('userToken');
+  window.location.href = '/html/login/login.html';
+}
