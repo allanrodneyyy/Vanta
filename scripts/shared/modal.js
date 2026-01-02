@@ -49,11 +49,12 @@ export function showDialog() {
 }
 
 export function toCart() {
-  const viewElem = document.querySelector('.dialog-view-cart-btn');
-
-  viewElem.addEventListener('click', () => {
-    window.location.href = "/html/cart/cart.html";
-  });
+  document.querySelectorAll('.dialog-view-cart-btn')
+    .forEach((viewCartElem) => {
+      viewCartElem.addEventListener('click', () => {
+        window.location.href = "/html/cart/cart.html";
+      });
+    });
 }
 
 export function renderCartDialog() {
@@ -106,7 +107,7 @@ export function renderCartDialog() {
               </div>
             </section>
             <section class="grid grid-cols-2 gap-2 ">
-              <button class = "border p-3 rounded-xl text-xs font-semibold">View cart</button>
+              <button class = "dialog-view-cart-btn border p-3 rounded-xl text-xs font-semibold">View cart</button>
               <button class = "border p-3 bg-stone-900 rounded-xl text-xs font-semibold text-white">Checkout</button>
             </section>
           </footer> 
@@ -130,6 +131,7 @@ export function showCartDialog() {
    dialogElem.addEventListener('close', () => {
     dialogElem.remove();
   });
+  toCart();
 }
 
 export function logInDialog() {
