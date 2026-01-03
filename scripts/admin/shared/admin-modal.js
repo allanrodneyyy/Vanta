@@ -122,7 +122,54 @@ export function displayToast() {
   setTimeout(() => {
     dialogElem.close();
   }, 1000);
-  dialogProductElem.close();
+
+  if(dialogProductElem)
+    dialogProductElem.close();
+
+  if(dialogDeleteProductElem)
+    dialogDeleteProductElem.close();
+
 }
 
 //End of toast for product
+//Delete toast
+//Start
+let dialogDeleteProductElem;
+export function deleteDialog() {
+  const dialogContainer = document.querySelector('.delete-product-dialog');
+  let dialogHTML = '';
+  dialogHTML = 
+  `
+    <form class = "delete-dialog-container flex flex-col gap-3 items-center justify-center"  method="dialog">
+      <header class="flex items-center justify-center">
+        <img class="size-6" src="/resources/delete.png" alt="">
+      </header>
+      <p class="font-bold text-2xl ">Are you sure?</p>
+      <p class="text-gray-500">This action cannot be undone. All values associated with this field will be lost.</p>
+      <footer class="flex gap-2 border-t-gray-300"> 
+        <button type="button" class="js-delete-product bg-red-600 items-center text-background p-2 flex gap-2">
+         Delete field
+        </button>
+        <button class="border border-gray-300 p-2 px-5">
+          Cancel
+        </button>
+      </footer>
+    </form> 
+  `
+  dialogContainer.innerHTML = dialogHTML;
+  showDeleteDialog();
+}
+
+//PART OF delete product DIALOG
+function showDeleteDialog() {
+  dialogDeleteProductElem = document.querySelector('.delete-product-dialog');
+  dialogDeleteProductElem.showModal();
+  dialogDeleteProductElem.addEventListener('click', (e) => {
+    if (e.target === dialogDeleteProductElem) dialogDeleteProductElem.close();
+  });
+
+  dialogDeleteProductElem.addEventListener('close', () => {
+    dialogDeleteProductElem.close();
+  });
+}
+//end delete dialog

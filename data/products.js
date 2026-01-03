@@ -43,6 +43,18 @@ export class Products {
     console.log(this.products);
   }
 
+  deleteProduct(itemId) {
+    let result = false;
+    this.products.forEach((item, index) => {
+      if(item.id === Number(itemId)) {
+        this.products.splice(index, 1);
+        result = true;
+      }
+    });
+    this.saveToLocalStorage();
+    return result;
+  }
+
   displayPrice(basePriceCents) {
     return (Math.round(basePriceCents) / 100).toFixed(2); 
   }

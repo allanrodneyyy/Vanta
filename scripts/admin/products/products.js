@@ -1,5 +1,5 @@
 import { Products } from "../../../data/products.js";
-import { renderModalProduct, toast } from "../shared/admin-modal.js";
+import { deleteDialog, renderModalProduct, toast } from "../shared/admin-modal.js";
 
 const products = new Products('Products');
 
@@ -16,21 +16,38 @@ function renderProducts() {
       <td class="border-b border-gray-300 px-4 py-2">${items.description}</td>
       <td class="border-b border-gray-300 px-4 py-2">Germany</td>
       <td class="border-b border-r border-gray-300 px-4 py-2 ">
-        <button class="js-view-button block cursor-pointer">
+        <button class="js-view-button block cursor-pointer" data-product-id=${items.id}>
           View
         </button>
-        <button class="cursor-pointer">
+        <button class="js-delete-button cursor-pointer" data-product-id=${items.id}>
           Delete
         </button>
       </td>
     </tr>
   `
  });
-
  container.innerHTML = containerHTML;
+ initActions();
 }
 
 renderProducts();
+function initActions(){
+  const viewElem = document.querySelectorAll('.js-view-button');
+  viewElem.forEach((viewButton) => {
+    viewButton.addEventListener('click', () => {
+      const itemId = viewButton.dataset.productId;
+    });
+  });
+
+  const deleteElem = document.querySelectorAll('.js-delete-button');
+  deleteElem.forEach((deleteButton) => {
+    deleteButton.addEventListener('click', () => {
+      const itemId = deleteButton.dataset.productId;
+      deleteDialog();
+      deleteProduct(itemId);
+    });
+  });
+}
 
 const addProductElem = document.querySelector('.js-add-product');
 addProductElem.addEventListener('click', () => {
@@ -78,6 +95,16 @@ function fieldChecker(data) {
   return result === 0 ? true : false;
 }
 
+function deleteProduct(itemId) {
+  const deleteElem = document.querySelector('.js-delete-product');
+  deleteElem.addEventListener('click', () => {
+    const result = products.deleteProduct(itemId);
+    if(result) {
+      toast('Deleted ');
+      renderProducts();
+    }
+  });
+}
 
 
 
