@@ -33,7 +33,7 @@ function addItem() {
     let data = {
       inventoryId,
       sku,
-      image: '/resources/product-image/BOX-TEE-CHALK-FRONT.webp',
+      image: '/resources/product-image/BOX-TEE-BLACK-FRONT.webp',
       productId,
       attributes: dropdownValue,
       collectionId: 0,
@@ -64,7 +64,7 @@ function renderItems(data) {
     console.log(item);
     containerHTML += `
       <tr class="hover:bg-gray-50">
-        <td class="border-b border-l border-gray-300 px-4 py-2">${item.sku}</td>
+        <td class="border-b border-l border-gray-300 px-4 py-2">${item.inventoryId}</td>
         <td class="border-b border-gray-300 px-4 py-2">${product.getMatchingItem(item.productId)?.name ?? ''}</td>
         <td class="border-b border-gray-300 px-4 py-2">${displayAttribute(item.attributes).join('<br>')}</td>
         <td class="text-center border-b border-gray-300 px-4 py-2">${item?.quantity ?? ''}</td>
@@ -91,7 +91,7 @@ function displayAttribute(data){
     const name = value.name.toLowerCase() + 'Id';
     const attributeValuesId = data[name];
     const values = attributeValues.getAttributeValues(attributeValuesId);
-    tempValue.push(...values);
+    tempValue.push(values);
   });
   const attributeValue = tempValue.map(obj => obj.attributeValue);
 

@@ -64,7 +64,13 @@ export class AttributeValues {
 
   getAttributeValues(AttributeValuesId) {
     let tempValue;
-    return tempValue = this.attributeValues.filter(values => Number(AttributeValuesId) === Number(values.id));
-  }
 
+    this.attributeValues.forEach((value, index) => {
+      if(Number(AttributeValuesId) === Number(value.id)){
+        tempValue = value;
+      }
+    });
+
+      return tempValue;
+  }
 }

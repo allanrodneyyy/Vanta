@@ -20,8 +20,8 @@ const allProducts = inventory.getAllItem(itemInventory.productId);
 const variants = inventory.getAllVariants(itemInventory.collectionId);
 
 document.querySelector('.title').innerText = product.name;
-const price = itemInventory.price;
-const markup = itemInventory.markup;
+const price = product.price;
+const markup = product.markup;
 const totalPrice = Number(price) + Number(markup);
 
 let viewHTML = '';
@@ -154,22 +154,104 @@ function viewVariant() {
 function displaySizes() {
   const container = document.querySelector('.js-size-container');
   let containerHTML = '';
-
+  let sizeValueHolder = [];
   allProducts.forEach((variant) => {
+    const attribute = attributeValues.getAttributeValues(variant.attributes.sizeId).attributeValue;
+    sizeValueHolder.push({
+      inventoryId: variant.inventoryId,
+      attribute,
+      quantity: variant.quantity,
+      threshold: variant.threshold
+    });
+  });
+
+  sizeValueHolder.forEach((size) => {
     containerHTML += `
       <button class="js-size border border-gray-200 px-3 py-1">
-        ${attributeValues.getAttributeValues(variant.attributes.sizeId)[0]?.attributeValue ?? ''}
+        ${size.attribute}
       </button>
     `;
   });
 
   container.innerHTML = containerHTML;
-  initSizeButtons();
+  // initSizeButtons();
 }
 
 displaySizes();
 
 function initSizeButtons() {
   const elem = document.querySelectorAll('.js-size');
-  
 }
+
+//   let sizeValue = [];
+//   let variantValue = [];
+
+// function normaliseData(value) {
+//   return {
+//     inventoryId: value.inventoryId,
+//     image: value.image,
+//     sku: value.sku,
+//     colorId: value.attributes.colorId,
+//     sizeId: value.attributes.sizeId,
+//     quantity: value.quantity
+//   }
+// }
+
+// allProducts.forEach(value => {
+//   const normalised = normaliseData(value);
+  
+//   if(value.attributes.colorId === itemInventory.attributes.colorId)
+//     sizeValue.push(normalised);
+//   else {
+//     console.log(value);
+//     variantValue.push(normalised);
+//   }
+// });
+
+
+// function displaySelections() {
+//   const container = document.querySelector('.js-variant-container');
+//   let containerHTML = '';
+
+//   variantValue.forEach((variant) => {
+//     containerHTML += `
+//       <div class ="js-view-variant size-15 border border-gray-200 hover:border-black cursor-pointer" data-inventory-Id = ${variant.inventoryId}>
+//         <img class="w-full h-full" src="${variant.image}" alt="">
+//       </div>
+//     `;
+//   });
+
+//   container.innerHTML = containerHTML;
+//   viewVariant();
+// }
+
+// displaySelections();
+
+// function displaySizes() {
+//   const container = document.querySelector('.js-size-container');
+//   let containerHTML = '';
+
+//   sizeValue.forEach((variant) => {
+//     const tempHolder = attributeValues.getAttributeValues(variant.sizeId);
+//     containerHTML += `
+//       <button class="js-size border border-gray-200 px-3 py-1">
+//         ${tempHolder?.attributeValue ?? ''}
+//       </button>
+//     `;
+//   });
+
+//   container.innerHTML = containerHTML;
+// }
+
+// displaySizes();
+
+
+// function viewVariant() {
+//   const viewElem = document.querySelectorAll('.js-view-variant');
+//   viewElem.forEach((viewButton) => {
+//     viewButton.addEventListener('click', () => {
+//       const inventoryId = viewButton.dataset.inventoryId;
+//       window.location.href = `/html/view-item/view-item.html?id=${inventoryId}`;
+//     });
+//   });
+// }
