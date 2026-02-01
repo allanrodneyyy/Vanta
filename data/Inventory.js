@@ -18,7 +18,17 @@ export class Inventory {
   }
 
   insertIntoInventory(data) {
-    this.items.push(data);
+    let matchingItem = this.items.find(v => v.inventoryId === data.inventoryId);
+    if(matchingItem) 
+      this.items.forEach((item, index) => {
+        if(item.inventoryId === data.inventoryId) {
+          data.quantity = Number(data.quantity) + Number(item.quantity);
+          this.items[index] = data;
+        }
+      });
+    else 
+      this.items.push(data);
+
     this.saveToLocalStorage();
   }
 
@@ -61,12 +71,22 @@ export class Inventory {
     return tempValue;
   }
 
-  getAllItem(productId, inventoryId) {
+  getAllItem(productId) {
     let tempValue = [];
     this.items.forEach((item) => {
       if(Number(item.productId) === Number(productId)) {
         tempValue.push(item);
       }
+    });
+    return tempValue;
+  }
+
+  itemIsExisting(productId, attributesIds) {
+    let tempValue = null;
+    this.items.forEach((item) => {
+      if(Number(item.productId) === Number(productId)) 
+        if(item.attributes.sizeId === attributesIds.sizeId && item.attributes.colorId === attributesIds.colorId) 
+          tempValue = item;
     });
     return tempValue;
   }

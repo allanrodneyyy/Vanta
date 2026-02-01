@@ -20,26 +20,30 @@ renderDialog.addEventListener('click', () => {
 });
 
 function addItem() {
+  let data = {};
   const sku = document.querySelector('.js-item-sku').value;
   const productId = document.querySelector('.js-item-product').value;
-  const quantity = document.querySelector('.js-item-quantity').value;
+  let quantity = document.querySelector('.js-item-quantity').value;
   const threshold = document.querySelector('.js-item-threshold').value;
   const dropdownValue = getDropdownValues();
   const tempValue = [];
   tempValue.push(productId, ...Object.values(dropdownValue), quantity, threshold);
   const result = fieldChecker(tempValue);
   if(result) {
-    const inventoryId = Math.random();
-    let data = {
-      inventoryId,
-      sku,
+    const itemExist = inventory.itemIsExisting(productId, dropdownValue);
+    const inventoryId = itemExist?.inventoryId ?? Math.random();
+
+    data = {
+      inventoryId: inventoryId,
+      sku: sku,
       image: '/resources/product-image/BOX-TEE-BLACK-FRONT.webp',
-      productId,
+      productId: productId,
       attributes: dropdownValue,
       collectionId: 0,
       quantity,
-      threshold
+      threshold: threshold
     }
+
     inventory.insertIntoInventory(data);
     toast('Item added');
     renderItems(inventory.searchFromInventory(''));
@@ -61,7 +65,6 @@ function renderItems(data) {
   const container = document.querySelector('.inventory-container');
   let containerHTML = '';
   data.forEach((item) => {
-    console.log(item);
     containerHTML += `
       <tr class="hover:bg-gray-50">
         <td class="border-b border-l border-gray-300 px-4 py-2">${item.inventoryId}</td>

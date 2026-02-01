@@ -21,7 +21,7 @@ function renderProducts(data) {
   containerHTML += 
   `
     <tr class="hover:bg-gray-50">
-      <td class="border-b border-l border-gray-300 px-4 py-2">${items.name}</td>
+      <td class="border-b border-l border-gray-300 px-4 py-2">${items.id}</td>
       <td class="border-b border-gray-300 px-4 py-2">
       ${subcategory.getMatchingSubcategory(items.subcategoryId)?.attributeValue || ''} / ${types.getMatchingType(items.typeId)?.typeName || ''}
       </td>

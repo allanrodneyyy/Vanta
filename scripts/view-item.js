@@ -154,24 +154,15 @@ function viewVariant() {
 function displaySizes() {
   const container = document.querySelector('.js-size-container');
   let containerHTML = '';
-  let sizeValueHolder = [];
-  allProducts.forEach((variant) => {
+  containerHTML = allProducts.map((variant) => {
     const attribute = attributeValues.getAttributeValues(variant.attributes.sizeId).attributeValue;
-    sizeValueHolder.push({
-      inventoryId: variant.inventoryId,
-      attribute,
-      quantity: variant.quantity,
-      threshold: variant.threshold
-    });
-  });
-
-  sizeValueHolder.forEach((size) => {
-    containerHTML += `
-      <button class="js-size border border-gray-200 px-3 py-1">
-        ${size.attribute}
+    return `
+      <button class="js-size border border-gray-200 px-3 py-1" data-id="${variant.inventoryId}" 
+      data-qty="${variant.quantity}" data-threshold="${variant.threshold}">
+        ${attribute}
       </button>
     `;
-  });
+  }).join("");
 
   container.innerHTML = containerHTML;
   // initSizeButtons();
