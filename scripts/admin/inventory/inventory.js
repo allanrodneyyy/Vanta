@@ -36,10 +36,10 @@ function addItem() {
     data = {
       inventoryId: inventoryId,
       sku: sku,
-      image: '/resources/product-image/BOX-TEE-BLACK-FRONT.webp',
+      image: '/resources/product-image/BOX-TEE-CHALK-FRONT.webp',
       productId: productId,
       attributes: dropdownValue,
-      collectionId: 0,
+      collectionId: productId,
       quantity,
       threshold: threshold
     }

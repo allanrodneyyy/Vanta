@@ -17,7 +17,21 @@ export const inventoryId = url.searchParams.get('id');
 const itemInventory = inventory.getMatchingItemInInventory(inventoryId);
 const product = products.getMatchingItem(itemInventory.productId);
 const allProducts = inventory.getAllItem(itemInventory.productId);
-const variants = inventory.getAllVariants(itemInventory.collectionId);
+const sizeValues = [];
+const variantValues = [];
+let matchingItem;
+
+allProducts.forEach((values) => {
+  if(values.productId === itemInventory.productId) {
+    if(values.attributes.colorId === itemInventory.attributes.colorId) {
+      sizeValues.push(values);
+    } else {
+      if(!matchingItem)
+        variantValues.push(values);
+      matchingItem = variantValues.find(v => v.inventoryId === values.inventoryId);
+    } 
+  }
+});
 
 document.querySelector('.title').innerText = product.name;
 const price = product.price;
@@ -121,7 +135,7 @@ function displayVariant() {
   const container = document.querySelector('.js-variant-container');
   let containerHTML = '';
 
-  variants.forEach((variant) => {
+  variantValues.forEach((variant) => {
     containerHTML += `
       <div class ="js-view-variant size-15  border ${border(variant.inventoryId)}" data-inventory-Id = ${variant.inventoryId}>
         <img class="w-full h-full" src="${variant.image}" alt="">
@@ -154,7 +168,7 @@ function viewVariant() {
 function displaySizes() {
   const container = document.querySelector('.js-size-container');
   let containerHTML = '';
-  containerHTML = allProducts.map((variant) => {
+  containerHTML = sizeValues.map((variant) => {
     const attribute = attributeValues.getAttributeValues(variant.attributes.sizeId).attributeValue;
     return `
       <button class="js-size border border-gray-200 px-3 py-1" data-id="${variant.inventoryId}" 

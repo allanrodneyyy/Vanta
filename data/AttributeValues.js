@@ -70,7 +70,6 @@ export class AttributeValues {
         tempValue = value;
       }
     });
-
       return tempValue;
   }
 }
