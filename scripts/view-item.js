@@ -11,6 +11,7 @@ const cart = new Cart('Order');
 const attributeValues = new AttributeValues('AttributeValue');
 
 let quantity = 0;
+let variantQuantity = 0;
 let quantityElem;
 const url = new URL(window.location.href);
 export const inventoryId = url.searchParams.get('id');
@@ -56,8 +57,8 @@ function generateHTML() {
         <p class="bg-stone-400 rounded-md px-2 py-1 text-white text-xs font-light">New Arrival</p>
         <p class="bg-stone-950 rounded-md px-2 py-1 text-white text-xs font-light">Sold out</p>
       </section>
-      <section class="flex flex-col gap-3">
-        <p class="text-sm font-light">Select Variant: </p>
+      <section class="flex flex-col gap-2">
+        <p class="text-xs font-extralight tracking-tight">select variant: </p>
         <div class="js-variant-container flex flex-wrap gap-2 ">
            
         </div>
@@ -81,6 +82,7 @@ function generateHTML() {
             <button class="js-quantity-add-btn p-3">+</button>
           </div>
         </div>
+        <p class="js-stocks-notice mb-1 text-xs font-extralight tracking-tight hidden text-red-500">Limited stocks remaining.</p>
       </section>
       <button class="js-add-to-cart-btn border py-2 w-auto lg:w-2/4">
         ADD 
@@ -98,27 +100,12 @@ function generateHTML() {
 
   
   viewElem.innerHTML = viewHTML;
-  initQuantityControl();
   addToCartControl();
   displayVariant();
 }
 
 generateHTML();
 
-function initQuantityControl() {
-  const addElem = document.querySelector('.js-quantity-add-btn');
-  const minusElem = document.querySelector('.js-quantity-minus-btn');
-  quantityElem = document.querySelector('.js-quantity');
-
-
-  addElem.addEventListener('click', () => {
-    quantityElem.value++;
-  });
-  minusElem.addEventListener('click', () => {
-    if(quantityElem.value > 1)
-      quantityElem.value--;
-  });
-}
 
 function addToCartControl() {
   const addToCartElem = document.querySelector('.js-add-to-cart-btn');
@@ -137,7 +124,7 @@ function displayVariant() {
 
   variantValues.forEach((variant) => {
     containerHTML += `
-      <div class ="js-view-variant size-15  border ${border(variant.inventoryId)}" data-inventory-Id = ${variant.inventoryId}>
+      <div class ="js-view-variant size-15  border data-[active=true]:border-black" data-inventory-Id = ${variant.inventoryId}>
         <img class="w-full h-full" src="${variant.image}" alt="">
       </div>
     `;
@@ -147,18 +134,12 @@ function displayVariant() {
   viewVariant();
 }
 
-function border(id){
-  let text = 'border-gray-200';
-  if(Number(id) === Number(itemInventory.inventoryId))
-    text = 'border-black-200';
-
-  return text;
-}
-
 function viewVariant() {
   const viewElem = document.querySelectorAll('.js-view-variant');
   viewElem.forEach((viewButton) => {
     viewButton.addEventListener('click', () => {
+      viewElem.forEach(b => b.dataset.active = 'false');
+      viewButton.dataset.active = true;
       const inventoryId = viewButton.dataset.inventoryId;
       window.location.href = `/html/view-item/view-item.html?id=${inventoryId}`;
     });
@@ -171,7 +152,7 @@ function displaySizes() {
   containerHTML = sizeValues.map((variant) => {
     const attribute = attributeValues.getAttributeValues(variant.attributes.sizeId).attributeValue;
     return `
-      <button class="js-size border border-gray-200 px-3 py-1" data-id="${variant.inventoryId}" 
+      <button class="js-size border border-gray-200 px-3 py-1 data-[active=true]:border-black" data-id="${variant.inventoryId}" 
       data-qty="${variant.quantity}" data-threshold="${variant.threshold}">
         ${attribute}
       </button>
@@ -179,84 +160,52 @@ function displaySizes() {
   }).join("");
 
   container.innerHTML = containerHTML;
-  // initSizeButtons();
+  selectSizeAndVariant();
 }
 
 displaySizes();
 
-function initSizeButtons() {
-  const elem = document.querySelectorAll('.js-size');
+function selectSizeAndVariant() {
+  const buttonElem = document.querySelectorAll('.js-size');
+  buttonElem.forEach((sizeButton) => {
+    sizeButton.addEventListener('click', () => {
+      buttonElem.forEach(b => b.dataset.active = 'false');
+      sizeButton.dataset.active = true;
+      updateSelectedVariant(sizeButton.dataset.id);
+    });
+  });
 }
 
-//   let sizeValue = [];
-//   let variantValue = [];
+function updateSelectedVariant(inventoryId) {
+  const threshold = document.querySelector('.js-stocks-notice');
+  quantityElem = document.querySelector('.js-quantity');
+  quantityElem.value = 1;
 
-// function normaliseData(value) {
-//   return {
-//     inventoryId: value.inventoryId,
-//     image: value.image,
-//     sku: value.sku,
-//     colorId: value.attributes.colorId,
-//     sizeId: value.attributes.sizeId,
-//     quantity: value.quantity
-//   }
-// }
+  let matchingItem = sizeValues.find(v => v.inventoryId === Number(inventoryId));
+  if(!matchingItem) return;
 
-// allProducts.forEach(value => {
-//   const normalised = normaliseData(value);
+  if(matchingItem.quantity === matchingItem.threshold) 
+    threshold.classList.remove('hidden');
+  else 
+    threshold.classList.add('hidden');
+
   
-//   if(value.attributes.colorId === itemInventory.attributes.colorId)
-//     sizeValue.push(normalised);
-//   else {
-//     console.log(value);
-//     variantValue.push(normalised);
-//   }
-// });
+  variantQuantity = matchingItem.quantity;
+}
 
+initQuantityControl();
+function initQuantityControl() {
+  const addElem = document.querySelector('.js-quantity-add-btn');
+  const minusElem = document.querySelector('.js-quantity-minus-btn');
+  quantityElem = document.querySelector('.js-quantity');
 
-// function displaySelections() {
-//   const container = document.querySelector('.js-variant-container');
-//   let containerHTML = '';
-
-//   variantValue.forEach((variant) => {
-//     containerHTML += `
-//       <div class ="js-view-variant size-15 border border-gray-200 hover:border-black cursor-pointer" data-inventory-Id = ${variant.inventoryId}>
-//         <img class="w-full h-full" src="${variant.image}" alt="">
-//       </div>
-//     `;
-//   });
-
-//   container.innerHTML = containerHTML;
-//   viewVariant();
-// }
-
-// displaySelections();
-
-// function displaySizes() {
-//   const container = document.querySelector('.js-size-container');
-//   let containerHTML = '';
-
-//   sizeValue.forEach((variant) => {
-//     const tempHolder = attributeValues.getAttributeValues(variant.sizeId);
-//     containerHTML += `
-//       <button class="js-size border border-gray-200 px-3 py-1">
-//         ${tempHolder?.attributeValue ?? ''}
-//       </button>
-//     `;
-//   });
-
-//   container.innerHTML = containerHTML;
-// }
-
-// displaySizes();
-
-
-// function viewVariant() {
-//   const viewElem = document.querySelectorAll('.js-view-variant');
-//   viewElem.forEach((viewButton) => {
-//     viewButton.addEventListener('click', () => {
-//       const inventoryId = viewButton.dataset.inventoryId;
-//       window.location.href = `/html/view-item/view-item.html?id=${inventoryId}`;
-//     });
-//   });
-// }
+  
+  addElem.addEventListener('click', () => {
+    if(variantQuantity > quantityElem.value)
+      quantityElem.value++;
+  });
+  minusElem.addEventListener('click', () => {
+    if(quantityElem.value > 1)
+      quantityElem.value--;
+  });
+}
