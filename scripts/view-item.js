@@ -87,14 +87,15 @@ function generateHTML() {
       <button class="js-add-to-cart-btn border py-2 w-auto lg:w-2/4">
         ADD 
       </button>
-      <section class="flex">
-        <div class="flex gap-7 text-sm font-bold border-gray-300 lg:w-2/4">
-          <p class="border-b-2 border-black ">Description</p>
+      <section class="flex flex-col gap-2">
+        <div class="flex gap-7 text-sm font-semibold border-gray-300 lg:w-2/4">
+          <p class="border-b-2 border-black">Description</p>
           <p>Sizing</p>
           <p>Shipping</p>
           <p>Returns</p>
         </div>
-      </section>  
+      </section>
+       ${generateDescription()}
     </div>
   `;
 
@@ -105,6 +106,27 @@ function generateHTML() {
 }
 
 generateHTML();
+
+function generateDescription(){
+  return `
+    <section class = "lg:w-2/4">
+      <div class="flex flex-col gap-4">
+        <header class="text-xl font-semibold">  
+          ${product.descriptionHeader}
+        </header>
+        <content class="text-sm">
+          ${product.description}
+        </content>
+        <section class = "font-medium">
+          ${product?.details ?? ''}
+        </section>
+        <section class = "font-medium">
+          ${product?.spec ?? ''}
+        </section>
+      </div>
+    </section>  
+  `;
+}
 
 
 function addToCartControl() {
@@ -199,7 +221,6 @@ function initQuantityControl() {
   const minusElem = document.querySelector('.js-quantity-minus-btn');
   quantityElem = document.querySelector('.js-quantity');
 
-  
   addElem.addEventListener('click', () => {
     if(variantQuantity > quantityElem.value)
       quantityElem.value++;
