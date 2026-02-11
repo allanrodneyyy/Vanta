@@ -2,6 +2,7 @@ import { AttributeValues } from "../data/AttributeValues.js";
 import { Cart } from "../data/cart.js";
 import { Inventory } from "../data/Inventory.js";
 import { Products } from "../data/products.js";
+import { Sizing } from "../data/SizeGuide.js";
 import { loadCartValue } from "./shared/header.js";
 import { renderDialog, showDialog } from "./shared/modal.js";
 
@@ -9,7 +10,17 @@ const products = new Products('Products');
 const inventory = new Inventory('Inventory');
 const cart = new Cart('Order');
 const attributeValues = new AttributeValues('AttributeValue');
+const sizeGuide = new Sizing();
 
+let FOUR_SUB_HEADINGS = [{
+  id:0,
+  name: 'Description',
+}, {
+  id:1,
+  name: 'Sizing',
+}
+
+];
 let quantity = 0;
 let variantQuantity = 0;
 let quantityElem;
@@ -21,6 +32,8 @@ const allProducts = inventory.getAllItem(itemInventory.productId);
 const sizeValues = [];
 const variantValues = [];
 let matchingItem;
+
+console.log(product);
 
 allProducts.forEach((values) => {
   if(values.productId === itemInventory.productId) {
@@ -88,45 +101,137 @@ function generateHTML() {
         ADD 
       </button>
       <section class="flex flex-col gap-2">
-        <div class="flex gap-7 text-sm font-semibold border-gray-300 lg:w-2/4">
-          <p class="border-b-2 border-black">Description</p>
-          <p>Sizing</p>
-          <p>Shipping</p>
-          <p>Returns</p>
+        <div class="js-subheadings-container flex gap-7 text-sm font-semibold border-b-2 border-gray-300 lg:w-2/4">
         </div>
+        <section class = "js-subheading-content-container lg:w-2/4">
+
+        </section>
       </section>
-       ${generateDescription()}
+       
     </div>
   `;
 
-  
   viewElem.innerHTML = viewHTML;
+  generateSubHeadings();
   addToCartControl();
   displayVariant();
 }
 
 generateHTML();
 
-function generateDescription(){
+function generateSubHeadings() {
+  const container = document.querySelector('.js-subheadings-container');
+  let containerHTML = '';
+  FOUR_SUB_HEADINGS.forEach((value) => {
+    containerHTML += `
+      <button class="js-subheadings data-[active=true]:border-b-2 data-[active=true]:pb-2" data-subheading-Id = ${value.id}>${value.name}</button>
+    `;
+  });
+  container.innerHTML = containerHTML;
+  initSubheadings();
+}
+
+function initSubheadings(){
+  const subheaders = document.querySelectorAll('.js-subheadings');
+  subheaders.forEach((subheader) => {
+    subheader.addEventListener('click', () => {
+      subheaders.forEach(b => b.dataset.active = 'false');
+      subheader.dataset.active = true;
+      generateSubheadingContent(subheader.dataset.subheadingId);
+    });
+  });
+
+  const buttonElem = document.querySelectorAll('.js-size');
+  buttonElem.forEach((sizeButton) => {
+    sizeButton.addEventListener('click', () => {
+      buttonElem.forEach(b => b.dataset.active = 'false');
+      sizeButton.dataset.active = true;
+      updateSelectedVariant(sizeButton.dataset.id);
+    });
+  });
+  
+  if(subheaders.length){
+    subheaders[0].dataset.active = true;
+    generateSubheadingContent(0);
+  }
+}
+
+
+function generateSubheadingContent(subheadingId){
+  const container = document.querySelector('.js-subheading-content-container');
+  let containerHTML = '';
+  if(Number(subheadingId) === 0)
+    containerHTML = generateSubDescription();
+  if(Number(subheadingId) === 1)
+    containerHTML = generateSizeGuide();
+
+  container.innerHTML = containerHTML;
+}
+
+function generateSubDescription() {
   return `
-    <section class = "lg:w-2/4">
-      <div class="flex flex-col gap-4">
-        <header class="text-xl font-semibold">  
-          ${product.descriptionHeader}
-        </header>
-        <content class="text-sm">
-          ${product.description}
-        </content>
-        <section class = "font-medium">
-          ${product?.details ?? ''}
-        </section>
-        <section class = "font-medium">
-          ${product?.spec ?? ''}
-        </section>
-      </div>
-    </section>  
+    <div class="flex flex-col gap-2">
+      <header class="text-base font-semibold">  
+        ${product.descriptionHeader}
+      </header>
+      <content class="text-xs">
+        ${product.description}
+      </content>
+      <section class = "font-medium">
+        ${product?.details ?? ''}
+      </section>
+      <section class = "font-medium">
+        ${product?.spec ?? ''}
+      </section>
+    </div>
   `;
 }
+
+function formatSize(v) {
+  if (v.size) return v.size;
+  return `${v.oversized} for oversized fit; ${v.right} for right fit`;
+}
+
+function generateSizeGuide(){
+  let html = '';
+  const allGuides = [
+    { title: "Male Tops:", data: sizeGuide.MALE_TOP_GUIDE },
+    { title: "Male Bottoms:", data: sizeGuide.MALE_BUTTOMS_GUIDE },
+    { title: "Female Tops:", data: sizeGuide.FEMALE_TOPS_GUIDE },
+    { title: "Female Bottoms:", data: sizeGuide.FEMALE_BOTTOMS }
+  ];
+
+  allGuides.forEach(guide => {
+    html += `
+      <h3 class="font-semibold text-sm">${guide.title}</h3>
+    `;
+
+    guide.data.forEach(v => {
+      html += `
+        <div>
+          <p class="text-xs">${v.range}: ${formatSize(v)}</p>
+        </div>
+      `;
+    });
+
+    html += `<div class ="mb-2"></div>`
+  });
+
+  html += `
+    <footer class="flex items-center gap-1">
+      <p class="text-sm font-semibold">
+        NOTE:
+        <span>
+          Sizing above is only applicable based on height. Sizing for different weight varies. 
+          If you prefer a more oversized fit, we suggest taking one size bigger.
+        </span>
+      </p>
+    </footer>
+  `;
+  
+  return html;
+}
+
 
 
 function addToCartControl() {
@@ -216,6 +321,7 @@ function updateSelectedVariant(inventoryId) {
 }
 
 initQuantityControl();
+
 function initQuantityControl() {
   const addElem = document.querySelector('.js-quantity-add-btn');
   const minusElem = document.querySelector('.js-quantity-minus-btn');
