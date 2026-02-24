@@ -5,7 +5,6 @@ import { Products } from "../data/products.js";
 import { Sizing } from "../data/SizeGuide.js";
 import { loadCartValue } from "./shared/header.js";
 import { toast } from "./admin/shared/admin-modal.js";
-import { renderDialog, showDialog } from "./shared/modal.js";
 
 
 const products = new Products('Products');

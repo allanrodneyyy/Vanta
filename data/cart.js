@@ -13,7 +13,6 @@ export class Cart {
 
   loadFromStorage() {
     this.cart = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
-
   }
 
   addToCart(inventoryId, quantityParam) {
@@ -34,5 +33,16 @@ export class Cart {
 
     this.saveToStorage();
     return result;
+  }
+
+  getMatchingItem(cartId) {
+    let matchingItem;
+     this.cart.forEach((value) => {
+      if(Number(value.inventoryId) === Number(cartId)) {
+        matchingItem = value;
+      }
+    });
+
+    return matchingItem;
   }
 }

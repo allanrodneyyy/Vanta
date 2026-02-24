@@ -1,6 +1,6 @@
 import { Cart } from "../../data/Cart.js";
 import { getLoggedInUser } from "../shared/usertoken.js";
-import { renderCartDialog } from "./modal.js";
+import { renderCartDialog } from "./cart.js";
 
 const cart = new Cart('Order');
 
@@ -10,7 +10,6 @@ export function loadCartValue() {
   if(document.querySelector('.js-header-cart-quantity')) {
     const cartElem = document.querySelectorAll('.js-header-cart-quantity');
   
-
     if(cart.cart.length){
       cartElem.forEach((elem) => {
         elem.classList.remove('hidden');
@@ -22,7 +21,7 @@ export function loadCartValue() {
 
   if(document.querySelector('.js-cart-header')) {
     const cartElem = document.querySelectorAll('.js-cart-header')
-      .forEach((cart) => {
+      cartElem.forEach((cart) => {
         cart.addEventListener('click', () => {
           renderCartDialog();
         });
