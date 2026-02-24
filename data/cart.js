@@ -1,5 +1,5 @@
 export class Cart {
-  items;
+  cart;
   #localStorageKey;
   
   constructor(localStorageKey) {
@@ -8,28 +8,31 @@ export class Cart {
   }
 
   saveToStorage() {
-    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.items));
+    localStorage.setItem(this.#localStorageKey, JSON.stringify(this.cart));
   }
 
   loadFromStorage() {
-    this.items = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
+    this.cart = JSON.parse(localStorage.getItem(this.#localStorageKey)) || [];
 
   }
 
-  addToCart(itemId, quantityParam) {
+  addToCart(inventoryId, quantityParam) {
+    let result;
     const quantity = Number(quantityParam);
     let matchingItem;
-    this.items.forEach((value) => {
-      if(value.itemId === itemId) {
+    this.cart.forEach((value) => {
+      if(value.inventoryId === inventoryId) {
         matchingItem = value;
+        result = true;
       }
     });
     
     if(matchingItem)
       matchingItem.quantity += quantity;
     else 
-      this.items.push({itemId, quantity: quantity});
+      this.cart.push({inventoryId, quantity: quantity});
 
     this.saveToStorage();
+    return result;
   }
 }

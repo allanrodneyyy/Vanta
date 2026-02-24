@@ -1,10 +1,12 @@
 import { AttributeValues } from "../data/AttributeValues.js";
-import { Cart } from "../data/cart.js";
+import { Cart } from "../data/Cart.js";
 import { Inventory } from "../data/Inventory.js";
 import { Products } from "../data/products.js";
 import { Sizing } from "../data/SizeGuide.js";
 import { loadCartValue } from "./shared/header.js";
+import { toast } from "./admin/shared/admin-modal.js";
 import { renderDialog, showDialog } from "./shared/modal.js";
+
 
 const products = new Products('Products');
 const inventory = new Inventory('Inventory');
@@ -23,29 +25,35 @@ let FOUR_SUB_HEADINGS = [{
 ];
 let quantity = 0;
 let variantQuantity = 0;
-let quantityElem;
+let quantityElem = document.querySelector('.js-quantity');
 const url = new URL(window.location.href);
 export const inventoryId = url.searchParams.get('id');
 const itemInventory = inventory.getMatchingItemInInventory(inventoryId);
 const product = products.getMatchingItem(itemInventory.productId);
-const allProducts = inventory.getAllItem(itemInventory.productId);
-const sizeValues = [];
-const variantValues = [];
+let sizeValues = [];
+let variantValues = [];
 let matchingItem;
+let sizeInventoryId;
 
-console.log(product);
+function categoriseItems() {
+  const allProducts = inventory.getAllItem(itemInventory.productId);
+  sizeValues = [];
+  variantValues = [];
+  allProducts.forEach((values) => {
+    if(values.productId === itemInventory.productId) {
+      if(values.attributes.colorId === itemInventory.attributes.colorId) {
+        sizeValues.push(values);
+      } else {
+        if(!matchingItem)
+          variantValues.push(values);
+        matchingItem = variantValues.find(v => v.inventoryId === values.inventoryId);
+      } 
+    }
+  });
+}
 
-allProducts.forEach((values) => {
-  if(values.productId === itemInventory.productId) {
-    if(values.attributes.colorId === itemInventory.attributes.colorId) {
-      sizeValues.push(values);
-    } else {
-      if(!matchingItem)
-        variantValues.push(values);
-      matchingItem = variantValues.find(v => v.inventoryId === values.inventoryId);
-    } 
-  }
-});
+categoriseItems();
+
 
 document.querySelector('.title').innerText = product.name;
 const price = product.price;
@@ -68,7 +76,7 @@ function generateHTML() {
       </section>
       <section class="flex item-center gap-2 mb-5">
         <p class="bg-stone-400 rounded-md px-2 py-1 text-white text-xs font-light">New Arrival</p>
-        <p class="bg-stone-950 rounded-md px-2 py-1 text-white text-xs font-light">Sold out</p>
+        <p class="js-soldout-text bg-stone-950 rounded-md px-2 py-1 text-white text-xs font-light hidden">Sold out</p>
       </section>
       <section class="flex flex-col gap-2">
         <p class="text-xs font-extralight tracking-tight">select variant: </p>
@@ -115,9 +123,30 @@ function generateHTML() {
   generateSubHeadings();
   addToCartControl();
   displayVariant();
+  displaySizes();
+  initQuantityControl();
 }
 
 generateHTML();
+
+
+function addToCartControl() {
+  const addToCartElem = document.querySelector('.js-add-to-cart-btn');
+  addToCartElem.addEventListener('click', () => {
+    if(sizeInventoryId){
+      quantity = quantityElem.value;
+      let result = cart.addToCart(sizeInventoryId, quantity);
+      if(result) {
+        inventory.updateQuantity(sizeInventoryId, quantity);
+        toast('Add to cart ');
+        generateHTML();
+        categoriseItems();
+        toast('Item added ');
+      }
+      
+    }
+  });
+}
 
 function generateSubHeadings() {
   const container = document.querySelector('.js-subheadings-container');
@@ -233,18 +262,6 @@ function generateSizeGuide(){
 }
 
 
-
-function addToCartControl() {
-  const addToCartElem = document.querySelector('.js-add-to-cart-btn');
-  
-  addToCartElem.addEventListener('click', () => {
-    quantity = quantityElem.value;
-    cart.addToCart(itemId, quantity);
-    loadCartValue();
-    renderDialog();   
-  });
-}
-
 function displayVariant() {
   const container = document.querySelector('.js-variant-container');
   let containerHTML = '';
@@ -295,6 +312,7 @@ displaySizes();
 function selectSizeAndVariant() {
   const buttonElem = document.querySelectorAll('.js-size');
   buttonElem.forEach((sizeButton) => {
+    if(Number(sizeButton.dataset.qty) === 0) sizeButton.classList.add('bg-gray-50');
     sizeButton.addEventListener('click', () => {
       buttonElem.forEach(b => b.dataset.active = 'false');
       sizeButton.dataset.active = true;
@@ -304,28 +322,48 @@ function selectSizeAndVariant() {
 }
 
 function updateSelectedVariant(inventoryId) {
-  const threshold = document.querySelector('.js-stocks-notice');
   quantityElem = document.querySelector('.js-quantity');
   quantityElem.value = 1;
 
   let matchingItem = sizeValues.find(v => v.inventoryId === Number(inventoryId));
   if(!matchingItem) return;
 
+  itemIsSoldout(matchingItem);
+  isItemInThreshold(matchingItem);
+  
+  variantQuantity = matchingItem.quantity;
+  sizeInventoryId = inventoryId;
+}
+
+
+
+function itemIsSoldout(matchingItem){
+  const addButtomElem = document.querySelector('.js-add-to-cart-btn')
+  if(matchingItem.quantity <= 0) {
+    document.querySelector('.js-soldout-text').classList.remove('hidden');
+    addButtomElem.disabled = true;
+    addButtomElem.classList.add('bg-stone-300');
+    addButtomElem.classList.remove('bg-white');
+  } else {
+    document.querySelector('.js-soldout-text').classList.add('hidden');
+    addButtomElem.disabled = false;
+    addButtomElem.classList.remove('bg-stone-300');
+    addButtomElem.classList.add('bg-white');
+  }
+}
+
+function isItemInThreshold(matchingItem){
+   const threshold = document.querySelector('.js-stocks-notice');
   if(matchingItem.quantity === matchingItem.threshold) 
     threshold.classList.remove('hidden');
   else 
     threshold.classList.add('hidden');
-
-  
-  variantQuantity = matchingItem.quantity;
 }
-
-initQuantityControl();
 
 function initQuantityControl() {
   const addElem = document.querySelector('.js-quantity-add-btn');
   const minusElem = document.querySelector('.js-quantity-minus-btn');
-  quantityElem = document.querySelector('.js-quantity');
+  
 
   addElem.addEventListener('click', () => {
     if(variantQuantity > quantityElem.value)

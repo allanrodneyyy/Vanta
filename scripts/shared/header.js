@@ -1,4 +1,4 @@
-import { Cart } from "../../data/cart.js";
+import { Cart } from "../../data/Cart.js";
 import { getLoggedInUser } from "../shared/usertoken.js";
 import { renderCartDialog } from "./modal.js";
 
@@ -11,10 +11,10 @@ export function loadCartValue() {
     const cartElem = document.querySelectorAll('.js-header-cart-quantity');
   
 
-    if(cart.items.length){
+    if(cart.cart.length){
       cartElem.forEach((elem) => {
         elem.classList.remove('hidden');
-        elem.innerText = cart.items.length;
+        elem.innerText = cart.cart.length;
       });
     } 
   }

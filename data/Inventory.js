@@ -95,4 +95,16 @@ export class Inventory {
     return this.items.filter(v => Number(v.collectionId) === Number(collectionId));
   }
 
+  updateQuantity(inventoryId, quantity) {
+    let result;
+    this.items.forEach((i, index) => {
+      if(i.inventoryId === Number(inventoryId)){
+        this.items[index].quantity -= quantity;
+        result = true;
+      }
+    });
+
+    this.saveToLocalStorage();
+    return result;
+  }
 }
