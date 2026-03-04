@@ -9,10 +9,14 @@ const cart = new Cart('Order');
 const inventory = new Inventory('Inventory');
 const products = new Products('Products');
 
+
 let allItems = [];
-cart.cart.forEach((item) => {
-  allItems.push(inventory.getMatchingItemInInventory(item.inventoryId));
-});
+function renderAllItems() {
+  allItems = [];
+  cart.cart.forEach((item) => {
+    allItems.push(inventory.getMatchingItemInInventory(item.inventoryId));
+  });
+}
 
 export function renderCartDialog() {
   let dialogHTML = '';
@@ -64,6 +68,7 @@ export function renderCartDialog() {
 }
 
 function addValueToDialog() {
+  renderAllItems();
   const container = document.querySelector('.cart-values-container');
   let containerHTML = allItems.map((item) => {
     const product = products.getMatchingItem(item.productId);
@@ -117,6 +122,7 @@ function displayFooterDialog(){
 }
 
 function renderCartHTML() {
+  renderAllItems();
   const container = document.querySelector('.cart-container-html');
   let containerHTML = '';
   let quantity = 0;
@@ -156,7 +162,7 @@ function renderCartHTML() {
               <button type= "button" class="js-quantity-add-btn" data-inventory-id = ${item.inventoryId}>+</button>
             </div>
           </div>
-          <button class="underline">
+          <button class="underline js-remove-item" data-inventory-id = ${item.inventoryId}>
             Remove
           </button>
         </td>
@@ -168,6 +174,7 @@ function renderCartHTML() {
     container.innerHTML = containerHTML;
 
   initQuantityFunctions();
+  removeItem();
 }
  
 renderCartHTML();
@@ -216,5 +223,13 @@ function quantityCheck(cartQuantity, itemInInventoryQuantity) {
 }
 
 function removeItem () {
-  
+  const removeElem = document.querySelectorAll('.js-remove-item');
+
+  removeElem.forEach((removeButton) => {
+    removeButton.addEventListener('click', () => {
+      const inventoryId = removeButton.dataset.inventoryId;
+      cart.deleteFromCart(inventoryId);
+      renderCartHTML();
+    });
+  });
 }

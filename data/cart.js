@@ -46,4 +46,9 @@ export class Cart {
 
     return matchingItem;
   }
+
+  deleteFromCart(inventoryId) {
+   this.cart = this.cart.filter(c => c.inventoryId !== inventoryId);
+   this.saveToStorage();
+  }
 }
