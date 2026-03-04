@@ -35,7 +35,7 @@ export function renderCartDialog() {
               <div class="flex flex-col gap-0.5 font-semibold text-base">
                 <section class="flex justify-between">
                   <p>Subtotal</p>
-                  <p>$114 AUD</p>
+                  <p  class="js-subtotal">$114 AUD</p>
                 </section>
                 <section>
                   <p class="text-xs font-light">
@@ -43,9 +43,9 @@ export function renderCartDialog() {
                   </p>
                 </section>
               </div>
-              <div class="flex justify-between font-bold text-xl">
+              <div class=" flex justify-between font-bold text-xl">
                 <p>Total</p>
-                <p>$114 AUD</p>
+                <p class="js-total">$114 AUD</p>
               </div>
             </section>
             <section class="grid grid-cols-2 gap-2 ">
@@ -60,6 +60,7 @@ export function renderCartDialog() {
   dialogContElem.innerHTML = dialogHTML;
   showCartDialog();
   addValueToDialog();
+  displayFooterDialog();
 }
 
 function addValueToDialog() {
@@ -76,7 +77,7 @@ function addValueToDialog() {
             <p class="font-bold text-sm">${product?.name}</p>
             
             <section class=" grid grid-cols-2 gap-x-2 font-normal text-xs items-center">
-              ${displayAttributes(item.attributes,item.inventoryId, totalPrice)}
+              ${displayAttributesDialog(item.attributes,item.inventoryId, totalPrice)}
             </section>
 
           </section>
@@ -87,12 +88,15 @@ function addValueToDialog() {
   container.innerHTML = containerHTML;
   
 }
-
-function displayAttributes(attr, inventoryId, price){
+let totalandSubtotal = 0;
+function displayAttributesDialog(attr, inventoryId, price){
   const size = attributeValues.getAttributeValues(attr?.sizeId)?.attributeValue;
   const color = attributeValues.getAttributeValues(attr?.colorId)?.attributeValue;
   const quantity = cart.getMatchingItem(inventoryId)?.quantity;
-  const totalPrice = Number(quantity) * Number(price);
+  const totalPricePerItem = Number(quantity) * Number(price);
+  if(totalPricePerItem)
+    totalandSubtotal += totalPricePerItem;
+
   return `
     <p class="">Color:</p>
     <p class="">${color}</p>
@@ -101,8 +105,116 @@ function displayAttributes(attr, inventoryId, price){
     <p class="">Quantity:</p>
     <p class="">${quantity}</p>
     <p class="">Total</p>
-    <p class="font-semibold">$${totalPrice.toFixed(2)}</p>
+    <p class="font-semibold">$${totalPricePerItem.toFixed(2)}</p>
   `;
 }
 
+function displayFooterDialog(){
+  const footerTotalElem = document.querySelector('.js-total');
+  const footerSubtotalElem = document.querySelector('.js-subtotal');
+  footerTotalElem.innerText = totalandSubtotal.toFixed(2);
+  footerSubtotalElem.innerText = totalandSubtotal.toFixed(2);
+}
+
+function renderCartHTML() {
+  const container = document.querySelector('.cart-container-html');
+  let containerHTML = '';
+  let quantity = 0;
+
+  containerHTML += allItems.map((item) => {
+    const product = products.getMatchingItem(item.productId);
+    const pricePerItem = Number(product?.price) + Number(product?.markup);
+    const size = attributeValues.getAttributeValues(item.attributes?.sizeId)?.attributeValue;
+    quantity = cart.getMatchingItem(item.inventoryId)?.quantity ?? 1;
+    const totalPrice = pricePerItem * quantity;
+    
+    return `
+      <tr>
+        <td class="flex items-center-safe gap-5 mt-5">
+          <img class="size-24" src="${item?.image}" alt="">
+          <div class="flex flex-col gap-1.5">
+            <p class="font-bold">${product?.name ?? ''}</p>
+            <p class="">$${pricePerItem.toFixed(2)}</p>
+            <p class="">${size}</p>
+            <div class="flex gap-2 min-[640px]:hidden">
+              <div class="border border-gray-300 w-22 py-1">
+                <button class="js-quantity-minus-btn pl-1.5" data-inventory-id = ${item.inventoryId}>-</button>
+                <input class="js-quantity outline-0 text-sm text-center w-11"  type="text" id = ${item.inventoryId}  disabled value = "${quantity ?? 1}">
+                <button type= "button" class="js-quantity-add-btn" data-inventory-id = ${item.inventoryId}>+</button>
+              </div>
+              <button class="underline">
+                Remove
+              </button>
+            </div>
+          </div>
+        </td>
+        <td class="text-center max-[640px]:hidden">
+          <div class=" flex items-center justify-center py-1">
+            <div class="border border-gray-300 p-1.5 rounded-md">
+              <button class="js-quantity-minus-btn pl-1.5" data-inventory-id = ${item.inventoryId} data-operation-id = "minus">-</button>
+              <input class="js-quantity outline-0 text-sm text-center w-11"  type="text" id = ${item.inventoryId}  disabled value = "${quantity ?? 1}">
+              <button type= "button" class="js-quantity-add-btn" data-inventory-id = ${item.inventoryId}>+</button>
+            </div>
+          </div>
+          <button class="underline">
+            Remove
+          </button>
+        </td>
+        <td class="text-right max-[640px]:hidden">$${totalPrice.toFixed(2)}</td>
+      </tr>
+    `;
+  }).join("");
+  if(container)
+    container.innerHTML = containerHTML;
+
+  initQuantityFunctions();
+}
  
+renderCartHTML();
+
+function initQuantityFunctions() {
+  const addQuantityElem = document.querySelectorAll('.js-quantity-add-btn');
+  const minusQuantityElem = document.querySelectorAll('.js-quantity-minus-btn');
+
+  addQuantityElem.forEach((field) => {
+    calculateQuantityAndTotal(field);
+  });
+  minusQuantityElem.forEach((field) => {
+    calculateQuantityAndTotal(field);
+  });
+}
+
+function calculateQuantityAndTotal(field) {
+  field.addEventListener('click', () => {
+    const operationId = field.dataset.operationId;
+    const inventoryId = field.dataset.inventoryId;
+
+    const itemInInventory = inventory.getMatchingItemInInventory(inventoryId);
+    const itemInCart = cart.getMatchingItem(inventoryId);
+
+    let quantityChange = 1;
+
+    // minus button
+    if (operationId) {
+      if (itemInCart.quantity <= 1) return; // STOP at 1
+      quantityChange = -1;
+    }
+
+    // check stock only when adding
+    if (quantityChange === 1) {
+      const canAdd = quantityCheck(itemInCart.quantity, itemInInventory.quantity);
+      if (!canAdd) return;
+    }
+
+    cart.addToCart(inventoryId, quantityChange);
+    renderCartHTML();
+  });
+}
+
+function quantityCheck(cartQuantity, itemInInventoryQuantity) {
+  return cartQuantity < itemInInventoryQuantity;
+}
+
+function removeItem () {
+  
+}

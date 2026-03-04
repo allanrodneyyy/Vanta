@@ -36,6 +36,7 @@ export class Cart {
   }
 
   getMatchingItem(cartId) {
+    this.loadFromStorage();
     let matchingItem;
      this.cart.forEach((value) => {
       if(Number(value.inventoryId) === Number(cartId)) {
